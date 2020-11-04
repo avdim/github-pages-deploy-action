@@ -7,6 +7,7 @@ import {
   generateRepositoryPath,
   generateTokenType
 } from './util'
+import * as action_github from '@actions/github'
 
 /** Initializes and runs the action.
  *
@@ -60,5 +61,27 @@ export default async function run(
     )
 
     exportVariable('DEPLOYMENT_STATUS', status)
+  }
+
+  if (configuration.gitHubToken != null) {
+    const octokit = action_github.getOctokit(configuration.gitHubToken)
+    // octokit.repos.createPagesSite()
+    // todo repo, owner
+    info('start octokit')
+    await octokit.request(
+      'POST /repos/avdim/github-pages-deploy-action/pages',
+      {
+        owner: 'avdim',
+        repo: 'github-pages-deploy-action',
+        source: {
+          branch: configuration.branch,
+          path: 'docs' //todo docs
+        },
+        mediaType: {
+          previews: ['switcheroo']
+        }
+      }
+    )
+    info('complete octokit')
   }
 }

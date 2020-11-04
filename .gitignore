@@ -12,7 +12,7 @@ assets/.nojekyll
 assets/CNAME
 
 # Build
-lib
+#lib
 
 ## Registry
 package-lock.json
@@ -27,3 +27,4 @@ coverage
 
 # Yarn Integrity file
 .yarn-integrity
+.idea

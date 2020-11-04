@@ -63,13 +63,14 @@ export default async function run(
     exportVariable('DEPLOYMENT_STATUS', status)
   }
 
-  if (configuration.gitHubToken != null) {
-    try {
-      const octokit = action_github.getOctokit(configuration.gitHubToken)
+  const gitHubToken = configuration.gitHubToken
+  if (gitHubToken != null) {
+    ;(async function () {
+      const octokit = action_github.getOctokit(gitHubToken)
       // octokit.repos.createPagesSite()
       // todo repo, owner
       info('start octokit')
-      await octokit.request(
+      const result = await octokit.request(
         'POST /repos/avdim/github-pages-deploy-action/pages',
         {
           owner: 'avdim',
@@ -84,9 +85,9 @@ export default async function run(
         }
       )
       info('complete octokit')
-    } catch (error) {
-      console.log('My catch block, error: ', error)
-      throw error
-    }
+      console.log(
+        result ? `This was a success! ${result}` : 'This was a failure.'
+      )
+    })()
   }
 }
